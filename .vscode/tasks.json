@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Arduboy: Test",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\test-arduboy.ps1"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Arduboy: Build StreetFightDojo",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\build-arduboy.ps1",
+        "-Sketch",
+        "arduboy\\StreetFightDojo\\StreetFightDojo.ino"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+board_manager:
+    additional_urls: []
+directories:
+    data: .\.arduino\data
+    downloads: .\.arduino\downloads
+    user: .\arduino-sketchbook
