@@ -10,6 +10,7 @@ The goal is not to build a fighting game. The goal is the pocket-dojo moment: en
 - Character choices: Ryu, Ken, Guile
 - Move practice for Hadouken, Shoryuken, Tatsumaki, Sonic Boom, and Flash Kick
 - Horizontal arcade-style input history using directional glyphs and A/B labels
+- Combo input history resets after 3 seconds without a new button press
 - Immediate success feedback with move name and short sound
 - Dojo Challenge score and EEPROM-backed high score
 - EEPROM-backed moves discovered and secrets found

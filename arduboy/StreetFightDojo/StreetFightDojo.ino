@@ -9,6 +9,7 @@ constexpr uint8_t ScreenWidth = 128;
 constexpr uint8_t ScreenHeight = 64;
 constexpr uint8_t HistorySize = 16;
 constexpr uint8_t ChargeFrames = 30;
+constexpr uint8_t ComboTimeoutFrames = 90;
 constexpr uint8_t SuccessFrames = 45;
 constexpr uint8_t SecretCount = 1;
 constexpr uint16_t SaveMagic = 0xD0A0;
@@ -99,6 +100,7 @@ uint8_t selectedMove = MoveHadouken;
 uint8_t challengeMove = MoveHadouken;
 uint8_t score = 0;
 uint8_t successTimer = 0;
+uint8_t comboIdleFrames = 0;
 uint8_t leftCharge = 0;
 uint8_t downCharge = 0;
 bool leftChargeReady = false;
@@ -249,6 +251,7 @@ void updateTraining(bool challenge) {
     return;
   }
 
+  updateComboTimeout();
   readInputs();
   checkSecrets();
 
@@ -370,6 +373,8 @@ void updateCharge() {
 }
 
 void addInput(InputCode input) {
+  comboIdleFrames = 0;
+
   if (inputCount < HistorySize) {
     inputHistory[inputCount] = input;
     inputCount++;
@@ -381,8 +386,23 @@ void addInput(InputCode input) {
   }
 }
 
+void updateComboTimeout() {
+  if (inputCount == 0) {
+    return;
+  }
+
+  if (comboIdleFrames < ComboTimeoutFrames) {
+    comboIdleFrames++;
+  }
+
+  if (comboIdleFrames >= ComboTimeoutFrames) {
+    clearInputs();
+  }
+}
+
 void clearInputs() {
   inputCount = 0;
+  comboIdleFrames = 0;
   leftCharge = 0;
   downCharge = 0;
   leftChargeReady = false;
@@ -463,13 +483,11 @@ void playMoveTone() {
 
 void drawMainMenu() {
   arduboy.clear();
-  arduboy.setCursor(12, 4);
-  arduboy.print(F("STREET FIGHT"));
-  arduboy.setCursor(42, 14);
-  arduboy.print(F("DOJO"));
-  drawMenuItem(0, 28, F("FREE PRACTICE"));
-  drawMenuItem(1, 38, F("DOJO CHALLENGE"));
-  drawMenuItem(2, 48, F("SECRETS"));
+  arduboy.setCursor(13, 4);
+  arduboy.print(F("STREET FIGHT DOJO"));
+  drawMenuItem(0, 24, F("FREE PRACTICE"));
+  drawMenuItem(1, 34, F("DOJO CHALLENGE"));
+  drawMenuItem(2, 44, F("SECRETS"));
   drawFooter();
   arduboy.display();
 }
