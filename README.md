@@ -4,7 +4,7 @@ Street Fight Dojo is a tiny Arduboy training toy for practicing classic fighting
 
 The goal is not to build a fighting game. The goal is the pocket-dojo moment: enter a motion correctly and see `HADOUKEN!` appear on a 128x64 screen.
 
-## Current MVP
+## Features
 
 - Main menu with Free Practice and Dojo Challenge
 - Character choices: Ryu, Ken, Guile
