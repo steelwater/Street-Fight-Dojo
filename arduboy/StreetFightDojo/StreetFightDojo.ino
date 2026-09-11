@@ -12,6 +12,7 @@ constexpr uint8_t ChargeFrames = 30;
 constexpr uint8_t ComboTimeoutFrames = 90;
 constexpr uint8_t SuccessFrames = 45;
 constexpr uint8_t SecretCount = 1;
+constexpr uint8_t AboutPageCount = 3;
 constexpr uint16_t SaveMagic = 0xD0A0;
 constexpr int SaveAddress = 64;
 
@@ -33,6 +34,7 @@ enum ScreenMode : uint8_t {
   ScreenFreePractice,
   ScreenChallenge,
   ScreenSecrets,
+  ScreenAbout,
   ScreenSuccess
 };
 
@@ -95,6 +97,7 @@ const Move Moves[MoveCount] = {
 InputCode inputHistory[HistorySize];
 uint8_t inputCount = 0;
 uint8_t menuIndex = 0;
+uint8_t aboutPage = 0;
 uint8_t selectedCharacter = CharacterRyu;
 uint8_t selectedMove = MoveHadouken;
 uint8_t challengeMove = MoveHadouken;
@@ -151,6 +154,10 @@ void loop() {
       updateSecrets();
       drawSecrets();
       break;
+    case ScreenAbout:
+      updateAbout();
+      drawAbout();
+      break;
     case ScreenSuccess:
       updateSuccess();
       drawSuccess();
@@ -176,7 +183,7 @@ void saveProgress() {
 }
 
 void updateMainMenu() {
-  updateMenuIndex(3);
+  updateMenuIndex(4);
 
   if (arduboy.justPressed(A_BUTTON)) {
     if (menuIndex == 0) {
@@ -185,8 +192,11 @@ void updateMainMenu() {
       screen = ScreenCharacterSelect;
     } else if (menuIndex == 1) {
       startChallenge();
-    } else {
+    } else if (menuIndex == 2) {
       screen = ScreenSecrets;
+    } else {
+      aboutPage = 0;
+      screen = ScreenAbout;
     }
   }
 }
@@ -227,6 +237,35 @@ void updateSecrets() {
   if (arduboy.justPressed(B_BUTTON | A_BUTTON)) {
     menuIndex = 0;
     screen = ScreenMainMenu;
+  }
+}
+
+void updateAbout() {
+  if (arduboy.justPressed(B_BUTTON)) {
+    if (aboutPage == 0) {
+      screen = ScreenMainMenu;
+    } else {
+      aboutPage--;
+    }
+    return;
+  }
+
+  if (arduboy.justPressed(UP_BUTTON) && aboutPage > 0) {
+    aboutPage--;
+    return;
+  }
+
+  if (arduboy.justPressed(A_BUTTON)) {
+    if (aboutPage + 1 < AboutPageCount) {
+      aboutPage++;
+    } else {
+      screen = ScreenMainMenu;
+    }
+    return;
+  }
+
+  if (arduboy.justPressed(DOWN_BUTTON) && aboutPage + 1 < AboutPageCount) {
+    aboutPage++;
   }
 }
 
@@ -483,11 +522,12 @@ void playMoveTone() {
 
 void drawMainMenu() {
   arduboy.clear();
-  arduboy.setCursor(13, 4);
+  arduboy.setCursor(13, 2);
   arduboy.print(F("STREET FIGHT DOJO"));
-  drawMenuItem(0, 24, F("FREE PRACTICE"));
-  drawMenuItem(1, 34, F("DOJO CHALLENGE"));
-  drawMenuItem(2, 44, F("SECRETS"));
+  drawMenuItem(0, 18, F("FREE PRACTICE"));
+  drawMenuItem(1, 27, F("DOJO CHALLENGE"));
+  drawMenuItem(2, 36, F("SECRETS"));
+  drawMenuItem(3, 45, F("ABOUT"));
   drawFooter();
   arduboy.display();
 }
@@ -566,6 +606,55 @@ void drawSecrets() {
   arduboy.print(bossUnlocked ? F("Boss unlocked") : F("Keep training"));
   arduboy.setCursor(0, 56);
   arduboy.print(F("A/B Back"));
+  arduboy.display();
+}
+
+void drawAbout() {
+  arduboy.clear();
+
+  if (aboutPage == 0) {
+    arduboy.setCursor(49, 0);
+    arduboy.print(F("ABOUT"));
+    arduboy.setCursor(13, 12);
+    arduboy.print(F("STREET FIGHT DOJO"));
+    arduboy.setCursor(10, 22);
+    arduboy.print(F("is a pocket trainer"));
+    arduboy.setCursor(16, 32);
+    arduboy.print(F("for fighting-game"));
+    arduboy.setCursor(28, 42);
+    arduboy.print(F("special moves."));
+    arduboy.setCursor(0, 56);
+    arduboy.print(F("A/DOWN Next B Back"));
+  } else if (aboutPage == 1) {
+    arduboy.setCursor(52, 0);
+    arduboy.print(F("GOAL"));
+    arduboy.setCursor(1, 12);
+    arduboy.print(F("Practice shown input."));
+    arduboy.setCursor(7, 22);
+    arduboy.print(F("Enter it correctly!"));
+    arduboy.setCursor(7, 34);
+    arduboy.print(F("FREE: repeat a move"));
+    arduboy.setCursor(7, 44);
+    arduboy.print(F("DOJO: score moves"));
+    arduboy.setCursor(0, 56);
+    arduboy.print(F("A/DN Next B/UP Prev"));
+  } else {
+    arduboy.setCursor(40, 0);
+    arduboy.print(F("CONTROLS"));
+    arduboy.setCursor(0, 10);
+    arduboy.print(F("D-PAD  Direction"));
+    arduboy.setCursor(0, 19);
+    arduboy.print(F("A / B  Attack"));
+    arduboy.setCursor(0, 28);
+    arduboy.print(F("A Select   B Back"));
+    arduboy.setCursor(0, 37);
+    arduboy.print(F("A+B  Exit training"));
+    arduboy.setCursor(0, 46);
+    arduboy.print(F("Diagonal: hold 2 dirs"));
+    arduboy.setCursor(0, 55);
+    arduboy.print(F("e.g. DOWN + RIGHT"));
+  }
+
   arduboy.display();
 }
 

@@ -6,7 +6,8 @@ The goal is not to build a fighting game. The goal is the pocket-dojo moment: en
 
 ## Features
 
-- Main menu with Free Practice and Dojo Challenge
+- Main menu with Free Practice, Dojo Challenge, Secrets, and About
+- Three-page in-game About reference covering the goal and controls
 - Character choices: Ryu, Ken, Guile
 - Move practice for Hadouken, Shoryuken, Tatsumaki, Sonic Boom, and Flash Kick
 - Horizontal arcade-style input history using directional glyphs and A/B labels
@@ -64,6 +65,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\upload-arduboy.ps1 -Port COMx
 - A: confirm menu selection
 - B: back from selection screens
 - A+B: exit training
+
+From the About screen, use A or Down for the next page and B or Up for the previous page. B returns to the main menu from the first page, and A returns from the final page.
 
 For diagonal inputs, press the two directions together, such as Down + Right for the Hadouken diagonal.
 
